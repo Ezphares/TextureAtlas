@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
-import png
-
 def log(*args):
+    return
     print(*args)
 
 """
@@ -262,8 +261,10 @@ class Packer(object):
                 self.grow_height(val1, val2)
             # Then go back and try again, unless the width is too small, in which case...
         
-        # ... we return the best packing, along with the sorted rectangles.
-        return (self.rects, self.best_pack)
+        # ... we place the rectangle at their best packing, then return them
+        for i in range(len(self.rects)):
+            self.rects[i].place(self.best_pack[1][i])
+        return self.rects, self.best_pack[0]
         
     def attempt(self):
         """
@@ -275,7 +276,7 @@ class Packer(object):
         This inconsistency is purely due to laziness and will be refactored
         soon(tm)
         """
-        print ('attempt at', self.size)
+        log ('attempt at', self.size)
         placed = 0
         col1 = 0
         # Create a packing matrix
@@ -317,8 +318,16 @@ class PackingRectangle(object):
     def __init__(self):
         self.size = (0,0)
         self.position = None
-        self.data = None
 
+    def get_data(self, x, y):
+        """
+        Returns image data as [r, g, b, a] at the absolute pixel position
+        (x, y). If this is not placed, or the coordinate is outside the
+        location, return None
+        """
+        return None
+        
+        
     @property
     def left(self):
         if self.position is None:
