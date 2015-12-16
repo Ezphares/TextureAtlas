@@ -52,15 +52,16 @@ class PngAtlas(object):
         
         index = {}
         for rectangle in self.rectangles:
-            otitle = rectangle.get_title()
-            title = otitle
-            attempt = 1
+            title = rectangle.get_title().replace('\\', '/')
             while title in index:
-                title = otitle + '__%i__' % attempt
-                attempt += 1
+                print('E: Attempted to index two rectangles with the same title: "%s"' % title)
+                exit(1)
                 
-            index[rectangle.get_title()] = {'x': rectangle.left, 'y': rectangle.top,
-                    'w': rectangle.size[0], 'h': rectangle.size[1]}
+            index[title] = {'x': rectangle.left,
+                            'y': rectangle.top,
+                            'w': rectangle.size[0],
+                            'h': rectangle.size[1],
+                            'a': atlasname}
 
         indexfile.write(bytes(json.dumps(index), 'UTF-8'))
         indexfile.close()
