@@ -29,14 +29,25 @@ class PackingMatrix(object):
         width = 0
         height = 0
         
-        #TODO: Count only rows and columns with content
-        for row in self.rows:
-            if row != float('inf'):
-                height += row
+        for i in range(len(self.rows)):
+            if self.rows[i] != float('inf'):
+                occupied = False
+                for field in self.full[i]:
+                    if field:
+                        occupied = True
+                        break
+                if occupied:
+                    height += self.rows[i]
                 
-        for column in self.columns:
-            if column != float('inf'):
-                width += column
+        for i in range(len(self.columns)):
+            if self.columns[i] != float('inf'):
+                occupied = False
+                for row in self.full:
+                    if row[i]:
+                        occupied = True
+                        break
+                if occupied:
+                    width += self.columns[i]
                 
         return (width, height)
         
@@ -214,12 +225,10 @@ class Packer(object):
             # ... see if we can pack the rectangles into the current size.
             # (First time this should always succeed, given the infinite
             # width)
-            success, param1, param2 = self.attempt()
-            if success:
-                # On success, (param1, param2) is the effective (width, height)
-                # of the packing matrix (see Packer.attempt())
-                w = param1
-                h = param2
+            result = self.attempt()
+            if result['success']:
+                w = result['w']
+                h = result['h']
                 
                 # Shrink the width of the packing area to the effective width
                 # of the matrix
@@ -244,10 +253,8 @@ class Packer(object):
                         grow = max(grow, rect.size[1])
                 self.grow_height(grow)
             else:
-                # If unsuccessful, param1 contains the total amount of rectangles
-                # placed, and param2 contains the amount placed in the first column
-                placed = param1
-                col1 = param2
+                placed = result['placed']
+                col1 = result['col1']
                 # When calculating the size to grow height, to ensure that rectangles
                 # actually rearrange, take the minimum of:
                 # (A) the height of the first rectangle that could not be placed
@@ -269,16 +276,20 @@ class Packer(object):
     def attempt(self):
         """
         A single attempt at placing all rectangles within the given size
-        On success returns:
-            True, effective_width, effective_height
+        Returns an object:
+            {success (bool) , placed (number), col1 (number in first column),
+             w (effective_width), h (effective_height) }
         On failure:
-            False, number_placed, number_placed_in_col_1
-        This inconsistency is purely due to laziness and will be refactored
-        soon(tm)
+            effective width and height will be set to 0
         """
         log ('attempt at', self.size)
         placed = 0
         col1 = 0
+        result = {'success': False,
+                  'placed': 0,
+                  'col1': 0,
+                  'w': 0,
+                  'h': 0}
         # Create a packing matrix
         matrix = PackingMatrix(self.size)
         # For each rect ...
@@ -292,16 +303,20 @@ class Packer(object):
                     matrix.try_place(rect, j, i)
                     if rect.position is not None:
                         # If placed, update counters
-                        placed += 1
+                        result['placed'] += 1
                         if j == 0:
-                            col1 += 1
+                            result['col1'] += 1
                         break
                 if rect.position is not None:
                     break
             # If any rect is not successfully placed, we were unsuccessful
             if rect.position is None:
-                return False, placed, col1
-        return True, matrix.effective_size()[0], matrix.effective_size()[1]
+                return result
+                
+        result['success'] = True
+        result['w'] = matrix.effective_size()[0]
+        result['h'] = matrix.effective_size()[1]
+        return result
     
     def shrink_width(self):
         self.size = (self.size[0] - 1, self.size[1])
