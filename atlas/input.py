@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import png
+import png, logging
 
 from atlas.packer import PackingRectangle
 
@@ -18,7 +18,7 @@ class PngRect(PackingRectangle):
         self.title = title
         self.size = (info[0], info[1])
         if meta['greyscale']:
-            print('E: Greyscale not yet supported')
+            logging.error('Greyscale not yet supported')
             exit(1)
         else:
             if meta['alpha']:
@@ -32,6 +32,7 @@ class PngRect(PackingRectangle):
                         self.data[-1].append(row[i])
                         if i % 3 == 2:
                             self.data[-1].append(255)
+        logging.info('Loaded PNG image %s with dimensions %ix%i' % (title, info[0], info[1]))
                             
     def get_data(self, x, y):
         if (self.position is None or x < self.left or x >= self.right or

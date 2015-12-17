@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-def log(*args):
-    return
-    print(*args)
+import logging
 
 """
 This module contains functionality for tightly packing rectangles using
@@ -96,7 +94,7 @@ class PackingMatrix(object):
             # If no split was needed, we don't need to update
             # contents
             return
-        log('splitting column', x)
+        logging.debug('splitting column', x)
         for row in self.full:
             # We need to insert a copy of the value at x in
             # each row, such that each value in the new columns
@@ -112,7 +110,7 @@ class PackingMatrix(object):
             # If no split was needed, we don't need to update
             # contents
             return
-        log('splitting row', y)
+        logging.debug('splitting row', y)
         # Since rows are the top level of the 2d array, copy the
         # entire split row, so that the new smaller rows has the
         # same values
@@ -124,7 +122,7 @@ class PackingMatrix(object):
         and row (iy) index inside the matrix, taking into account
         space taken up by previously placed rects.
         """
-        log('placing rect at', ix, iy)
+        logging.debug('placing rect at', ix, iy)
         free_height = 0
         free_width = 0
         height_indices = 0
@@ -170,7 +168,7 @@ class PackingMatrix(object):
             y += self.rows[i]
         
         # Place the rect
-        log('placed at (', x, y, ')')
+        logging.debug('placed at (', x, y, ')')
         rect.place((x, y))
         # Split the matrix at the bottom right corner of the
         # rect, if necessary
@@ -229,6 +227,7 @@ class Packer(object):
             if result['success']:
                 w = result['w']
                 h = result['h']
+                logging.info('Packing succeeded at %ix%i' % (w, h))
                 
                 # Shrink the width of the packing area to the effective width
                 # of the matrix
@@ -240,6 +239,7 @@ class Packer(object):
                 if area < self.best_pack[0]:
                     # Save the area size and the positions of each rectangle
                     self.best_pack = (area, [(r.left, r.top) for r in self.rects])
+                    logging.info('New best packing found')
                 
                 # Now, shrink the width of the area
                 self.shrink_width()
@@ -255,6 +255,7 @@ class Packer(object):
             else:
                 placed = result['placed']
                 col1 = result['col1']
+                logging.info('Packing failed at %ix%i (%i placed)' % (self.size[0], self.size[1], placed))
                 # When calculating the size to grow height, to ensure that rectangles
                 # actually rearrange, take the minimum of:
                 # (A) the height of the first rectangle that could not be placed
@@ -282,7 +283,7 @@ class Packer(object):
         On failure:
             effective width and height will be set to 0
         """
-        log ('attempt at', self.size)
+        logging.debug('attempt at', self.size)
         placed = 0
         col1 = 0
         result = {'success': False,

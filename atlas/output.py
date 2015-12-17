@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import png, json
+import png, json, logging
 
 class PngAtlas(object):
     def __init__(self, rectangles):
@@ -30,13 +30,13 @@ class PngAtlas(object):
         try:
             outfile = open(atlasname, 'wb')
         except:
-            print('E: Could not open output file for writing')
+            logging.exception('Could not open output file for writing')
             exit(1)
             
         try:
             indexfile = open(indexname, 'wb')
         except:
-            print('E: Could not open index file for writing')
+            logging.exception('Could not open index file for writing')
             exit(1)
             
         outdata = []
@@ -53,16 +53,17 @@ class PngAtlas(object):
         index = {}
         for rectangle in self.rectangles:
             title = rectangle.get_title().replace('\\', '/')
-            while title in index:
-                print('E: Attempted to index two rectangles with the same title: "%s"' % title)
-                exit(1)
+            if title in index:
+                logging.warning('Attempted to index two rectangles with the same title: "%s" (one will be missing from index)' % title)
+                continue
                 
             index[title] = {'x': rectangle.left,
                             'y': rectangle.top,
                             'w': rectangle.size[0],
                             'h': rectangle.size[1],
                             'a': atlasname}
-
+        
+        logging.info('Writing atlas file with dimensions %ix%i' % size)
         indexfile.write(bytes(json.dumps(index), 'UTF-8'))
         indexfile.close()
         

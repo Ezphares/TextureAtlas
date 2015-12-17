@@ -3,6 +3,7 @@
 import sys
 import os
 import argparse
+import logging
 
 from atlas.packer import *
 from atlas.input import *
@@ -18,9 +19,14 @@ if __name__ == '__main__':
     parser.add_argument('files', nargs='+', metavar="IMAGE", help='filenames of the images to pack')
     parser.add_argument('-a', '--atlas', default='atlas.png', help='filename of the atlas file')
     parser.add_argument('-i', '--index', default='index.json', help='filename of the index file')
-   
+    parser.add_argument('-v', '--verbose', action='store_const',
+                        default=False, const=True, help='display verbose progress info')
+    
     args = parser.parse_args()
-    print(args)
+    
+    # Set parent loglevel"
+    logging.basicConfig(level = logging.INFO if args.verbose else logging.WARNING)
+    
     rects = []
     
     # Load images
@@ -31,7 +37,7 @@ if __name__ == '__main__':
             rects.append(PngRect(infile, name))
             infile.close()
         except:
-            print('E: Could not open input file [%s] for reading' % name)
+            logging.exception('Could not open input file [%s] for reading' % name)
             exit(1)
     
     # Input and output
