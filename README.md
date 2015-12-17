@@ -9,7 +9,7 @@ http://www.codeproject.com/Articles/210979/Fast-optimizing-rectangle-packing-alg
 From `atlas.py --help`:
 
 ```
-usage: atlas.py [-h] [-a ATLAS] [-i INDEX] IMAGE [IMAGE ...]
+usage: atlas.py [-h] [-a ATLAS] [-i INDEX] [-v] IMAGE [IMAGE ...]
 
 Packs several image file into a single atlas image, and provides an index file
 mapping filenames to rectangles in the atlas
@@ -23,6 +23,7 @@ optional arguments:
                         filename of the atlas file (default: atlas.png)
   -i INDEX, --index INDEX
                         filename of the index file (default: index.json)
+  -v, --verbose         display verbose progress info (default: False)
 ```
 
 ## The Future?
