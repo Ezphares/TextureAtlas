@@ -9,9 +9,11 @@ from atlas.input import *
 from atlas.output import *
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description = '''
-    Packs several image file into a single atlas image, and provides 
-    an index file mapping filenames to rectangles in the atlas\n''')
+    parser = argparse.ArgumentParser(
+            description = '''
+            Packs several image file into a single atlas image, and provides 
+            an index file mapping filenames to rectangles in the atlas\n''',
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
     parser.add_argument('files', nargs='+', metavar="IMAGE", help='filenames of the images to pack')
     parser.add_argument('-a', '--atlas', default='atlas.png', help='filename of the atlas file')

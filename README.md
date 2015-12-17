@@ -20,9 +20,9 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -a ATLAS, --atlas ATLAS
-                        filename of the atlas file
+                        filename of the atlas file (default: atlas.png)
   -i INDEX, --index INDEX
-                        filename of the index file
+                        filename of the index file (default: index.json)
 ```
 
 ## The Future?
