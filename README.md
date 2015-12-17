@@ -5,14 +5,25 @@ The packing algorithm itself is implemented based on the description at
 http://www.codeproject.com/Articles/210979/Fast-optimizing-rectangle-packing-algorithm-for-bu
 
 ## Usage
-```
-atlas.py { inputfiles } { options }
-```
 
-Possible options:
+From `atlas.py --help`:
 
-* `-o filename` sets the name of the output (atlas) file. Default `atlas.png`
-* `-i filename` sets the name of the index file. Default `index.json`
+```
+usage: atlas.py [-h] [-a ATLAS] [-i INDEX] IMAGE [IMAGE ...]
+
+Packs several image file into a single atlas image, and provides an index file
+mapping filenames to rectangles in the atlas
+
+positional arguments:
+  IMAGE                 filenames of the images to pack
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ATLAS, --atlas ATLAS
+                        filename of the atlas file
+  -i INDEX, --index INDEX
+                        filename of the index file
+```
 
 ## The Future?
 
