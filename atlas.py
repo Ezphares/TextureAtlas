@@ -22,12 +22,12 @@ if __name__ == '__main__':
     parser.add_argument('-it', '--indextype', default='json', choices=['json', 'css'],
                         help='type of index file')
     parser.add_argument('-v',  '--verbose', action='store_const',
-                        default=False, const=True, help='display verbose progress info')
+                        default=argparse.SUPPRESS, const=True, help='display verbose progress info')
     
     args = parser.parse_args()
     
     # Set parent loglevel"
-    logging.basicConfig(level = logging.INFO if args.verbose else logging.WARNING)
+    logging.basicConfig(level = logging.INFO if 'verbose' in args.__dict__ else logging.WARNING)
     
     rects = []
     

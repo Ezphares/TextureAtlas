@@ -36,7 +36,7 @@ optional arguments:
                         (default: index)
   -it {json,css}, --indextype {json,css}
                         type of index file (default: json)
-  -v, --verbose         display verbose progress info (default: False)
+  -v, --verbose         display verbose progress info
 ```
 
 ## The Future?
