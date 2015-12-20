@@ -17,9 +17,11 @@ if __name__ == '__main__':
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
     parser.add_argument('files', nargs='+', metavar="IMAGE", help='filenames of the images to pack')
-    parser.add_argument('-a', '--atlas', default='atlas.png', help='filename of the atlas file')
-    parser.add_argument('-i', '--index', default='index.json', help='filename of the index file')
-    parser.add_argument('-v', '--verbose', action='store_const',
+    parser.add_argument('-a',  '--atlas', default='atlas', help='filename of the atlas file (without extension)')
+    parser.add_argument('-i',  '--index', default='index', help='filename of the index file (without extension)')
+    parser.add_argument('-it', '--indextype', default='json', choices=['json', 'css'],
+                        help='type of index file')
+    parser.add_argument('-v',  '--verbose', action='store_const',
                         default=False, const=True, help='display verbose progress info')
     
     args = parser.parse_args()
@@ -40,9 +42,22 @@ if __name__ == '__main__':
             logging.exception('Could not open input file [%s] for reading' % name)
             exit(1)
     
-    # Input and output
+    
+    
+    # Packing   
     packer = Packer(rects)
     res, area = packer.pack()
-    PngAtlas(res).write(args.atlas, args.index)
+    
+    # Atlas
+    atlasfile = '%s.%s' % (args.atlas, 'png')
+    PngAtlas(res).write(atlasfile)
+    
+    # Index
+    indexfile = '%s.%s' % (args.index, args.indextype)
+    indexclass = {
+        'json': JsonIndexOutput,
+        'css': CssIndexOutput
+    }[args.indextype]
+
+    indexclass(res, indexfile, atlasfile).write()
         
-            
