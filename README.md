@@ -4,6 +4,10 @@ Python scripts to create a texture atlas (spritesheet) and index file from a set
 The packing algorithm itself is implemented based on the description at 
 http://www.codeproject.com/Articles/210979/Fast-optimizing-rectangle-packing-algorithm-for-bu
 
+## Prerequisites
+
+[pypng](https://pypi.org/project/pypng/)
+
 ## Usage
 Basic usage:
 ```
