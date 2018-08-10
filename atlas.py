@@ -23,20 +23,23 @@ if __name__ == '__main__':
                         help='type of index file')
     parser.add_argument('-v',  '--verbose', action='store_const',
                         default=argparse.SUPPRESS, const=True, help='display verbose progress info')
-    
+    parser.add_argument('-pma', '--premultiply-alpha', action='store_true',
+                        help='Premultiplies the alpha channel into the color channels, desired for some rendering pipelines')
+
     args = parser.parse_args()
     
     # Set parent loglevel"
     logging.basicConfig(level = logging.INFO if 'verbose' in args.__dict__ else logging.WARNING)
     
     rects = []
-    
     # Load images
     for name in args.files:
         try:
             # TODO: Add correct filetype
             infile = open(name, 'rb')
-            rects.append(PngRect(infile, name))
+            rect = PngRect(infile, name)
+            rect.premultiply_alpha = args.premultiply_alpha
+            rects.append(rect)
             infile.close()
         except:
             logging.exception('Could not open input file [%s] for reading' % name)

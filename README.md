@@ -17,7 +17,7 @@ Several options exists for customizing behaviour.
 From `atlas.py --help`:
 
 ```
-usage: atlas.py [-h] [-a ATLAS] [-i INDEX] [-it {json,css}] [-v]
+usage: atlas.py [-h] [-a ATLAS] [-i INDEX] [-it {json,css}] [-v] [-pma]
                 IMAGE [IMAGE ...]
 
 Packs several image file into a single atlas image, and provides an index file
@@ -37,6 +37,10 @@ optional arguments:
   -it {json,css}, --indextype {json,css}
                         type of index file (default: json)
   -v, --verbose         display verbose progress info
+  -pma, --premultiply-alpha
+                        Premultiplies the alpha channel into the color
+                        channels, desired for some rendering pipelines
+                        (default: False)
 ```
 
 ## The Future?

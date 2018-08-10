@@ -7,7 +7,7 @@ from atlas.packer import PackingRectangle
 # Creates an image rectangle from a PNG file
 class PngRect(PackingRectangle):
     def __init__(self, file, title):
-        super(PackingRectangle, self).__init__()
+        super(PngRect, self).__init__()
         
         reader = png.Reader(file)
         info = reader.read()
@@ -34,7 +34,7 @@ class PngRect(PackingRectangle):
                             self.data[-1].append(255)
         logging.info('Loaded PNG image %s with dimensions %ix%i' % (title, info[0], info[1]))
                             
-    def get_data(self, x, y):
+    def child_get_data(self, x, y):
         if (self.position is None or x < self.left or x >= self.right or
                 y < self.top or y >= self.bottom):
             return None

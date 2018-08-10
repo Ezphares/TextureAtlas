@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import abc
 import logging
 
 """
@@ -325,7 +326,7 @@ class Packer(object):
     def grow_height(self, val1, val2 = 0):
         self.size = (self.size[0], self.size[1] + min(val1, val2))
 
-class PackingRectangle(object):
+class PackingRectangle(object, metaclass=abc.ABCMeta):
     """
     This class represents a rectangle that should be packed. It contains
     a size and position, as well as properties to retrieve coordinates 
@@ -334,6 +335,7 @@ class PackingRectangle(object):
     def __init__(self):
         self.size = (0,0)
         self.position = None
+        self.premultiply_alpha = True
 
     def get_data(self, x, y):
         """
@@ -341,8 +343,20 @@ class PackingRectangle(object):
         (x, y). If this is not placed, or the coordinate is outside the
         location, return None
         """
+        data = self.child_get_data(x, y)
+        if self.premultiply_alpha:
+            if data[3] != 255:
+                alpha = float(data[3]) / 255
+                for i in range(2):
+                    data[i] = int(float(data[i]) * alpha)
+        return data
+
+    @abc.abstractmethod
+    def child_get_data(self, x, y):
+        """
+        Override this in child classes
+        """
         return None
-        
         
     @property
     def left(self):
